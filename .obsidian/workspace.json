@@ -1,0 +1,197 @@
+{
+  "main": {
+    "id": "ee2e4327f9adfe28",
+    "type": "split",
+    "children": [
+      {
+        "id": "79e28866a10f5b6b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2a43c38dc05dc6a6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "reading/the-paper-computer.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "the-paper-computer"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2bb65f126da530c1",
+    "type": "split",
+    "children": [
+      {
+        "id": "9938fa9ebc79cb57",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b73c2a6b0cda257b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "e0b83b7c3acb8215",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "fef3d2c2cf28ded5",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 259.5
+  },
+  "right": {
+    "id": "05452fb445023b70",
+    "type": "split",
+    "children": [
+      {
+        "id": "40798e4cc172a1a2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fec89431216b4fb9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "reading/the-paper-computer.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "the-paper-computer 的反向链接列表"
+            }
+          },
+          {
+            "id": "892ff30a6d0e698b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "reading/the-paper-computer.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "the-paper-computer 的出链列表"
+            }
+          },
+          {
+            "id": "e10514b297b9967e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "2e238b45512e3094",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "ffe2acdbe01cb6da",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "reading/the-paper-computer.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "the-paper-computer 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false,
+      "hide-folders:Show hidden folders": false
+    }
+  },
+  "active": "b73c2a6b0cda257b",
+  "lastOpenFiles": [
+    "reading/bali-canggu.md",
+    "sources/sources.md",
+    "sources/feeds.opml",
+    "sources",
+    "reading/karpathy-llm-wiki-summary.md",
+    "reading/async-future-directions.md",
+    "reading/the-paper-computer.md"
+  ]
+}
