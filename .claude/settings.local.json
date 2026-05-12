@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git add:*)",
-      "mcp__webfetch__web_fetch",
-      "mcp__websearch__web_search"
-    ]
-  }
-}
