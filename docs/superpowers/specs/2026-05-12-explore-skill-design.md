@@ -1,4 +1,4 @@
-# Explore Skill 设计文档
+# lore-dive Skill 设计文档
 
 **日期：** 2026-05-12
 **状态：** 已批准
@@ -15,13 +15,13 @@
 
 **这是一个 superpowers-compatible skill，不是 Claude Code command。**
 
-- 文件位置：`.claude/skills/explore/SKILL.md`
+- 文件位置：`.claude/skills/lore-dive/SKILL.md`
 - 格式：YAML frontmatter + markdown，与 `.claude/skills/lore/SKILL.md` 完全一致
 - 触发：通过 Skill tool 调用，注册为项目本地 skill
 
 ```yaml
 ---
-name: explore
+name: lore-dive
 description: Use when the user wants to deeply explore a question through conversation and capture the process as a structured document.
 ---
 ```
@@ -31,7 +31,7 @@ description: Use when the user wants to deeply explore a question through conver
 ## 触发方式
 
 ```
-/explore "你的根问题"
+/lore-dive "你的根问题"
 ```
 
 Skill 以根问题为入口自动开启 session。无需显式关闭命令，AI 自然检测用户的完成意图。
