@@ -73,12 +73,17 @@ status: active
 | **附录：探索路径** | 直接追加：v1 Q&A 保持不变，v2 Q&A 按时间顺序追加在后面 |
 
 执行步骤：
-1. Read `explore/<slug>.md` 和 `explore/<slug>-2.md`
-2. AI 综合生成新的合成文章正文（不简单拼接，需理解结构关系）
-3. 附录部分：v1 附录原文 + v2 附录原文 顺序拼接
-4. Write 覆盖 `explore/<slug>.md`（frontmatter 更新 `explored` 日期）
-5. 删除 `explore/<slug>-2.md` 和 `explore/<slug>-2-session.md`
-6. 告知用户：「已合并至 `explore/<slug>.md`」
+1. **先 commit 当前状态（安全快照）**：
+   ```bash
+   git add explore/<slug>.md explore/<slug>-2.md explore/<slug>-2-session.md
+   git commit -m "chore: snapshot before merging <slug>-2 into <slug>"
+   ```
+2. Read `explore/<slug>.md` 和 `explore/<slug>-2.md`
+3. AI 综合生成新的合成文章正文（不简单拼接，需理解结构关系）
+4. 附录部分：v1 附录原文 + v2 附录原文 顺序拼接
+5. Write 覆盖 `explore/<slug>.md`（frontmatter 更新 `explored` 日期）
+6. 删除 `explore/<slug>-2.md` 和 `explore/<slug>-2-session.md`
+7. 告知用户：「已合并至 `explore/<slug>.md`，合并前状态已保存在上一个 commit，如需回滚可 `git checkout HEAD~1 -- explore/<slug>.md`」
 
 ### 用户选「保留分开」
 
