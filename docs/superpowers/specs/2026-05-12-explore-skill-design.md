@@ -11,6 +11,23 @@
 
 ---
 
+## Skill 形态
+
+**这是一个 superpowers-compatible skill，不是 Claude Code command。**
+
+- 文件位置：`.claude/skills/explore/SKILL.md`
+- 格式：YAML frontmatter + markdown，与 `.claude/skills/lore/SKILL.md` 完全一致
+- 触发：通过 Skill tool 调用，注册为项目本地 skill
+
+```yaml
+---
+name: explore
+description: Use when the user wants to deeply explore a question through conversation and capture the process as a structured document.
+---
+```
+
+---
+
 ## 触发方式
 
 ```
@@ -24,7 +41,10 @@ Skill 以根问题为入口自动开启 session。无需显式关闭命令，AI 
 ## 工作流
 
 1. **触发**：用户调用 `/explore "根问题"`
-2. **Session 检测**：扫描 `explore/` 目录，检查是否存在匹配主题的未完成 session 文件（`status: active`）→ 继续或新建
+2. **Session Recovery（每次启动强制执行）**：扫描 `explore/` 下所有 `*-session.md`，找到 `status: active` 的文件
+   - 找到：读取完整内容重建上下文，询问用户「继续当前探索『xxx』还是开启新 session？」
+   - 未找到：以用户提供的根问题新建 session
+   - **Session 文件是唯一的跨会话记忆，每轮必须读取**
 3. **探索循环**：
    - 用户自由提问，AI 逐轮回答
    - 每轮交互实时追加到 session 文件
@@ -130,3 +150,15 @@ explored: 2026-05-12
 - `explore/` 与 `reading/` 平级，独立命名空间，互不干扰
 - 两者都以 Markdown 文件为真实来源，风格一致
 - 未来可考虑在 `reading/` 笔记中交叉引用 `explore/` 探索文档（本期不做）
+
+---
+
+## 实现注意事项
+
+**Skill 编写采用 writing-skills TDD 流程：**
+
+1. **RED**：先跑无 skill 的基准测试，记录 AI 自然状态下的行为偏差（比如忘记写文件、忘记恢复 session）
+2. **GREEN**：写最小化 skill 覆盖这些偏差
+3. **REFACTOR**：发现新漏洞时补充，直到行为稳定
+
+参考：`superpowers:writing-skills`
