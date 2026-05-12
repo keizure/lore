@@ -24,9 +24,9 @@ description: Use when the user wants to deeply explore a question through open-e
 1. 用 Glob 工具扫描 `explore/*-session.md`
 2. 用 Read 工具读取找到的文件，检查 frontmatter 中 `status` 字段
 3. **找到 `status: active` 的 session：**
-   - 读取完整内容（恢复上下文）
-   - 告知用户：「发现进行中的探索：『[root]』，继续这个 session 吗？还是开启新探索？」
-   - 用户选「继续」→ 跳至阶段 2，从上次中断处继续
+   - 如果只有一个：读取完整内容，告知用户：「发现进行中的探索：『[root]』，继续这个 session 吗？还是开启新探索？」
+   - 如果有多个：列出所有找到的 session（标题 + 文件名），让用户选择一个继续，或选择「全部忽略，开启新探索」
+   - 用户选「继续」→ 读取对应 session 完整内容，跳至阶段 2，从上次中断处继续
    - 用户选「新开」→ 进入阶段 1
 4. **未找到活跃 session：** 直接进入阶段 1
 
@@ -45,6 +45,7 @@ description: Use when the user wants to deeply explore a question through open-e
 ```markdown
 ---
 root: "<用户的根问题>"
+slug: <slug>
 started: <YYYY-MM-DDThh:mm:ss>
 status: active
 ---
@@ -60,7 +61,8 @@ status: active
 
 1. **回答用户的问题**（充分、深入）
 
-2. **立即用 Edit 工具追加写入 session 文件**（回答后立即执行，不可积攒）：
+2. **立即将本轮内容写入 session 文件**（回答后立即执行，不可积攒）：
+   用 Read 工具读取当前 session 文件完整内容，在末尾追加以下内容，再用 Write 工具覆盖写入：
 
 ```markdown
 ## Q<n> <简短标题>
@@ -78,9 +80,9 @@ status: active
 4. **检测话题漂移：** 如果用户新问题与根问题语义距离较远，在回答前先提示：
    > 「这个问题和当前 session『[root]』关联不大，要新开一个 session 吗？还是继续归入当前？」
 
-   用户选「新开」→ 用 Edit 将当前 session `status` 改为 `paused`，回到阶段 1。
+   用户选「新开」→ 用 Read 读取当前 session 文件，将 `status: active` 改为 `status: paused`，用 Write 覆盖写入，回到阶段 1。（`paused` 为终止状态，不会被恢复，等同于 `done`。）
 
-5. **检测完成意图（每轮检查）：** 用户说「够了」「结束」「可以了」「生成文档」「好了」「done」→ 立即进入阶段 3。
+5. **检测完成意图（每轮检查）：** 用户说「完成」「够了」「结束」「可以了」「生成文档」「好了」「done」→ 立即进入阶段 3。
 
 ---
 
@@ -88,7 +90,7 @@ status: active
 
 1. 用 Read 工具读取完整 session 文件
 2. 将所有问答合成为连贯文章（去掉「问：/答：」格式，直接可读，保留核心内容）
-3. 用 Write 工具生成 `explore/<slug>.md`：
+3. 从 session 文件 frontmatter 读取 `slug` 字段，用 Write 工具生成 `explore/<slug>.md`：
 
 ```markdown
 ---
