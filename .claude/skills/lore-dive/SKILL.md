@@ -28,7 +28,18 @@ description: Use when the user wants to deeply explore a question through open-e
    - 如果有多个：列出所有找到的 session（标题 + 文件名），让用户选择一个继续，或选择「全部忽略，开启新探索」
    - 用户选「继续」→ 读取对应 session 完整内容，跳至阶段 2，从上次中断处继续
    - 用户选「新开」→ 进入阶段 1
-4. **未找到活跃 session：** 直接进入阶段 1
+4. **未找到活跃 session：** 直接进入步骤 5
+
+5. **续集检测**：检查用户输入是否含有以下关键词：「继续」「在...基础上」「之前探索过」「接着」「继续探索」「continue」「follow up」「build on」「revisit」
+   - **含关键词**：用 Glob 扫描 `explore/*.md`（排除 `*-session.md`），列出所有已完成的探索，格式：
+     ```
+     1. [root 问题] (文件名)
+     2. [root 问题] (文件名)
+     ```
+     询问用户：「选择要继续的探索编号，或输入 0 开启全新探索：」
+     - 用户选编号 → 用 Read 读取对应 `explore/<slug>.md` 全文作为背景上下文，进入阶段 1（**续集模式**）
+     - 用户选 0 → 进入阶段 1（新建模式）
+   - **不含关键词**：直接进入阶段 1（新建模式）
 
 **关键：session 文件是唯一的跨会话记忆。每次启动必须执行，不可跳过，即使用户提供了新问题。**
 
@@ -50,6 +61,22 @@ started: <YYYY-MM-DDThh:mm:ss>
 status: active
 ---
 ```
+
+**普通模式**：使用上方 frontmatter 模板。
+
+**续集模式**（从续集检测进入时）：slug 在原 slug 末尾追加 `-2`（再续集加 `-3`），frontmatter 增加 `continues` 字段：
+
+```markdown
+---
+root: "<新问题或继续探索的方向>"
+slug: <slug>-2
+continues: <slug>
+started: <YYYY-MM-DDThh:mm:ss>
+status: active
+---
+```
+
+创建续集 session 文件后，告知用户：「已加载『[原 root]』的探索背景，续集 session 已创建（`explore/<slug>-2-session.md`）。请继续提问。」
 
 3. 立即进入阶段 2，回答根问题。
 
@@ -119,6 +146,24 @@ explored: <YYYY-MM-DD>
 
 4. 用 Edit 工具将 session 文件 `status: active` 改为 `status: done`
 5. 告知用户：「探索文档已生成：`explore/<slug>.md`」
+
+6. **续集合并提示**（仅当 session frontmatter 含 `continues` 字段时）：询问用户：
+   > 「续集探索已生成 `explore/<slug>-2.md`。要把它合并进原文档 `explore/<slug>.md` 吗？合并后只保留一个文档，续集文件会被删除。」
+
+   **用户选「合并」：**
+   1. 先 commit 当前状态（安全快照）：
+      ```bash
+      git add explore/<slug>.md explore/<slug>-2.md explore/<slug>-2-session.md
+      git commit -m "chore: snapshot before merging <slug>-2 into <slug>"
+      ```
+   2. Read `explore/<slug>.md` 和 `explore/<slug>-2.md`
+   3. **合成文章**：AI 重新综合正文——理解 v2 在 v1 哪个位置深挖，将 v2 内容整合进对应位置，生成结构完整的新文章（**不是简单拼接**）
+   4. **附录**：v1 附录原文 + v2 附录原文 顺序拼接
+   5. Write 覆盖 `explore/<slug>.md`（frontmatter `explored` 字段更新为当日日期）
+   6. 删除 `explore/<slug>-2.md` 和 `explore/<slug>-2-session.md`
+   7. 告知用户：「已合并至 `explore/<slug>.md`。如需回滚：`git checkout HEAD~1 -- explore/<slug>.md`」
+
+   **用户选「保留分开」：** 不执行任何操作，两个文档都保留。
 
 ---
 
