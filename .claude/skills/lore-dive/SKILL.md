@@ -90,44 +90,68 @@ description: Use when the user wants to deeply explore a question through open-e
 
 ### 阶段 0：Session Recovery（每次启动必须先执行）
 
-1. 用 Glob 工具扫描 `explore/*-session.md`
-2. 用 Read 工具读取找到的文件，检查 frontmatter 中 `status` 字段
-3. **找到 `status: active` 的 session：**
-   - 如果只有一个：读取完整内容，告知用户：「发现进行中的探索：『[root]』，继续这个 session 吗？还是开启新探索？」
-   - 如果有多个：列出所有找到的 session，让用户选择一个继续，或选择「全部忽略，开启新探索」。展示格式：
-     - 普通 session：`[root]（文件名）`
-     - 续集 session：`「[thread_title]」的续集 → [root]（文件名）`
-   - 用户选「继续」→ 读取对应 session 完整内容，跳至阶段 2，从上次中断处继续
-   - 用户选「新开」→ 进入阶段 1
-4. **未找到活跃 session：** 直接进入步骤 5
+1. 用 Read 工具读取 `explore/index.yaml`
+   - 文件不存在：用 Write 工具创建 `explore/index.yaml`（内容：`[]`），并创建 `explore/log.md`（内容：空）
 
-5. **续集检测**：检查用户输入是否含有以下关键词：「继续」「在...基础上」「之前探索过」「接着」「继续探索」「continue」「follow up」「build on」「revisit」
-   - **含关键词**：用 Glob 扫描 `explore/*.md`（排除 `*-session.md`），列出所有已完成的探索，格式：
+2. **检查显式管理动作（优先级最高，匹配即执行，不继续后续步骤）：**
+   - 用户输入含「list」或「列表」→ 执行 **list 命令**（见下方），结束流程
+   - 用户输入含「合并」或「merge」且包含 slug 名称 → 执行**手动合并流程**（见下方），结束流程
+
+3. **Session Recovery**：从 index.yaml 中筛选 `status: active` 和 `status: paused` 的条目
+   - **有活跃/暂停 session：** 分组展示：
      ```
-     1. [root 问题] (文件名)
-     2. [root 问题] (文件名)
+     进行中：
+       1. [root] (slug, started: YYYY-MM-DD)
+     暂停中：
+       2. [root] (slug, started: YYYY-MM-DD)
+     ```
+     询问：「选择编号继续/恢复，或输入 0 开启新探索：」
+     - 用户选编号 → Read 对应 `explore/<slug>-session.md` 全文，跳至阶段 2
+     - 用户选 0 → 进入步骤 4
+   - **无活跃/暂停 session：** 直接进入步骤 4
+
+4. **续集检测**：检查用户输入是否含有以下关键词：「继续」「在...基础上」「之前探索过」「接着」「继续探索」「continue」「follow up」「build on」「revisit」
+   - **含关键词**：从 index.yaml 中筛选 `status: done` 且无 `continues` 字段的条目，列出：
+     ```
+     1. [root 问题] (slug, explored: YYYY-MM-DD)
+     2. [root 问题] (slug, explored: YYYY-MM-DD)
      ```
      询问用户：「选择要继续的探索编号，或输入 0 开启全新探索：」
-     - 用户选编号 → 用 Read 读取对应 `explore/<slug>.md` 全文作为背景上下文，进入阶段 1（**续集模式**）
+     - 用户选编号 → Read `explore/<slug>.md` 全文作为背景上下文，进入阶段 1（**续集模式**）
      - 用户选 0 → 进入阶段 1（新建模式）
    - **不含关键词**：直接进入阶段 1（新建模式）
 
-6. **合并触发检测**：检查用户输入是否包含「合并」或「merge」关键词，且包含 slug 名称：
-   - **匹配时**：进入手动合并流程（见下方），**不进入阶段 1**
-   - **不匹配时**：继续正常流程
+**list 命令：**
+
+从 index.yaml 中读取所有 `status: done` 的条目，按 `continues` 字段构建树形关系，输出：
+
+```
+已完成的探索（N）：
+
+1. [root] (slug, explored: YYYY-MM-DD)
+   └─ [续集 root] (slug-2, explored: YYYY-MM-DD) [已合并]
+
+2. [root] (slug, explored: YYYY-MM-DD)
+```
 
 **手动合并流程：**
-1. 从用户输入解析主 slug；若未指定续集 slug，自动推断为 `<slug>-2`
-2. 检查以下文件是否均存在：
-   - `explore/<slug>.md`
-   - `explore/<slug>-2.md`
-   - `explore/<slug>-2-session.md`（且 `status: done`）
-3. 若文件不完整：告知用户「未找到可合并的文件，请检查 slug 名称」，结束流程
-4. 若文件完整：提示用户确认：「要把『<slug>-2』的探索合并进『<slug>』吗？」
-5. 用户确认 → 执行阶段 3「用户选合并」的完整流程（步骤 1-10）
-6. 用户取消 → 不执行任何操作，结束流程
 
-**关键：session 文件是唯一的跨会话记忆。每次启动必须执行，不可跳过，即使用户提供了新问题。**
+1. 从用户输入解析主 slug
+2. **候选续集推断（按优先级）：**
+   - 用户明确指定续集 slug → 直接用
+   - index.yaml 中该 slug 下只有一个 `status: done` 的 `continues` 条目 → 自动用
+   - 有多个 `status: done` 的 `continues` 条目 → 列出让用户选：
+     ```
+     发现多个可合并的续集，请选择：
+       1. [root] (slug-2)
+       2. [root] (slug-3)
+     ```
+   - 无 `status: done` 的续集 → 告知「未找到可合并的续集，请检查 slug 名称」，结束流程
+3. 提示用户确认：「要把『[续集 slug]』的探索合并进『[主 slug]』吗？」
+4. 用户确认 → 执行阶段 3「用户选合并」的完整流程
+5. 用户取消 → 不执行任何操作，结束流程
+
+**关键：`explore/index.yaml` 是唯一的跨会话状态记忆。每次启动必须读取，不可跳过，即使用户提供了新问题。**
 
 ---
 
