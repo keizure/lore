@@ -1,0 +1,25 @@
+- slug: transformer-attention
+  root: "Transformer 的 Attention 机制是怎么工作的"
+  status: done
+  started: 2026-05-10
+  explored: 2026-05-10
+
+- slug: tcp-three-way-handshake
+  root: "TCP 三次握手是怎么工作的"
+  status: done
+  started: 2026-05-11
+  explored: 2026-05-11
+
+- slug: llm-layering
+  root: "如果让你来做整个大语言模型的分层，你会怎么分？"
+  status: done
+  started: 2026-05-12
+  explored: 2026-05-13
+
+- slug: llm-layering-2
+  root: "残差连接和 FFN 主要解决的问题是什么？"
+  status: done
+  started: 2026-05-12
+  explored: 2026-05-12
+  continues: llm-layering
+  merged: true
