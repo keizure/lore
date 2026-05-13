@@ -42,6 +42,11 @@ description: Use when the user wants to deeply explore a question through open-e
   root: "Transformer 的 Attention 机制是怎么工作的"
   status: paused
   started: 2026-05-10
+
+- slug: some-topic
+  root: "某个偏题的探索"
+  status: abandoned
+  started: 2026-05-11
 ```
 
 **字段说明：**
