@@ -20,29 +20,50 @@
 
 ### 方案：index 为主，session 文件为数据
 
-- `explore/index.md` 是唯一的状态来源
+- `explore/index.yaml` 是唯一的状态来源
 - `explore/log.md` 是 append-only 操作记录
 - Session Recovery、list 命令、合并流程全部只读 index，按需再读具体文件
 - session 文件 frontmatter 仍保留（便于直接阅读），但不作为权威状态
 
-### `explore/index.md` 格式
+### `explore/index.yaml` 格式
 
-```markdown
-# Explore Index
+```yaml
+- slug: llm-layering
+  root: "如果让你来做整个大语言模型的分层，你会怎么分？"
+  status: done
+  started: 2026-05-12
+  explored: 2026-05-12
 
-## Active
-- llm-layering-session | 如果让你来做整个大语言模型的分层，你会怎么分？ | started: 2026-05-12
+- slug: llm-layering-2
+  root: "残差连接和 FFN 主要解决什么问题？"
+  status: done
+  started: 2026-05-13
+  explored: 2026-05-13
+  continues: llm-layering
+  merged: true
 
-## Paused
-- transformer-attention-session | Transformer 的 Attention 机制是怎么工作的 | started: 2026-05-10
+- slug: transformer-attention
+  root: "Transformer 的 Attention 机制是怎么工作的"
+  status: paused
+  started: 2026-05-10
 
-## Done
-- llm-layering | 如果让你来做整个大语言模型的分层，你会怎么分？ | explored: 2026-05-12
-  └─ llm-layering-2 | 残差连接和 FFN 主要解决什么问题？ | explored: 2026-05-13 | merged: true
-
-## Abandoned
-- some-topic-session | 某个偏题的探索 | started: 2026-05-11
+- slug: some-topic
+  root: "某个偏题的探索"
+  status: abandoned
+  started: 2026-05-11
 ```
+
+**字段说明：**
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `slug` | 是 | 唯一标识，对应文件名（不含 `-session` 后缀） |
+| `root` | 是 | 根问题原文 |
+| `status` | 是 | `active` / `paused` / `done` / `abandoned` |
+| `started` | 是 | session 创建日期 |
+| `explored` | done 时 | 文档生成日期 |
+| `continues` | 续集时 | 主 slug |
+| `merged` | 续集合并后 | `true` |
 
 ### `explore/log.md` 格式（append-only）
 
@@ -101,7 +122,7 @@
 2. [root 问题] (slug, 日期)
 ```
 
-数据来源：index.md 的 Done 区段。
+数据来源：`explore/index.yaml` 中 `status: done` 的条目，按 `continues` 字段构建树形关系。
 
 ---
 
