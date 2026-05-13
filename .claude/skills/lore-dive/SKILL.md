@@ -304,9 +304,12 @@ explored: <YYYY-MM-DD>
 ```
 
 4. 用 Edit 工具将 session 文件 `status: active` 改为 `status: done`
-5. 告知用户：「探索文档已生成：`explore/<slug>.md`」
+5. **更新 index.yaml 和 log.md：**
+   - Read `explore/index.yaml`，找到当前 slug 的条目，更新 `status` 为 `done` 并追加 `explored: <YYYY-MM-DD>` 字段，用 Write 覆盖写入
+   - Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] done | <slug>`，用 Write 覆盖写入
+6. 告知用户：「探索文档已生成：`explore/<slug>.md`」
 
-6. **续集合并提示**（仅当 session frontmatter 含 `continues` 字段时）：询问用户：
+7. **续集合并提示**（仅当 session frontmatter 含 `continues` 字段时）：询问用户：
    > 「续集探索已生成 `explore/<slug>-2.md`。要把它合并进原文档 `explore/<slug>.md` 吗？合并后只保留一个文档，续集文件会被删除。」
 
    **用户选「合并」：**
