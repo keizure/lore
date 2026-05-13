@@ -249,7 +249,13 @@ status: active
 4. **检测话题漂移：** 如果用户新问题与根问题语义距离较远，在回答前先提示：
    > 「这个问题和当前 session『[root]』关联不大，要新开一个 session 吗？还是继续归入当前？」
 
-   用户选「新开」→ 用 Read 读取当前 session 文件，将 `status: active` 改为 `status: abandoned`，用 Write 覆盖写入，回到阶段 1。
+   用户选「新开」→
+   - 用 Read 读取当前 session 文件，将 `status: active` 改为 `status: paused`，用 Write 覆盖写入
+   - Read `explore/index.yaml`，找到当前 slug 的条目，将 `status: active` 改为 `status: paused`，用 Write 覆盖写入
+   - Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] pause | <slug>`，用 Write 覆盖写入
+   - 回到阶段 1
+
+   用户选「继续归入」→ 正常进入阶段 2 回答，归入当前 session
 
 5. **检测完成意图（每轮检查）：** 用户说「完成」「够了」「结束」「可以了」「生成文档」「好了」「done」→ 立即进入阶段 3。
 
