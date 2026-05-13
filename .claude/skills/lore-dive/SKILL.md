@@ -178,7 +178,17 @@ explored: <YYYY-MM-DD>
    4. **附录**：v1 附录原文 + v2 附录原文 顺序拼接
    5. Write 覆盖 `explore/<slug>.md`（frontmatter `explored` 字段更新为当日日期）
    6. 删除 `explore/<slug>-2.md`
-   7. 告知用户：「已合并至 `explore/<slug>.md`。如需回滚：`git checkout HEAD~1 -- explore/<slug>.md`」
+   7. 读取 `explore/<slug>-2-session.md` 的完整内容（frontmatter 之后的所有问答）
+   8. 在 `explore/<slug>-session.md` 末尾追加以下内容，用 Write 覆盖写入：
+
+      ```
+      --- 续集 <slug>-2 ---
+
+      （<slug>-2-session.md 中 frontmatter 之后的全部问答内容）
+      ```
+
+   9. 删除 `explore/<slug>-2-session.md`
+   10. 告知用户：「已合并至 `explore/<slug>.md`，原始问答数据已合入 `explore/<slug>-session.md`。如需回滚：`git checkout HEAD~1 -- explore/<slug>.md`」
 
    **用户选「保留分开」：** 不执行任何操作，两个文档都保留。
 
