@@ -313,27 +313,37 @@ explored: <YYYY-MM-DD>
    > 「续集探索已生成 `explore/<slug>-2.md`。要把它合并进原文档 `explore/<slug>.md` 吗？合并后只保留一个文档，续集文件会被删除。」
 
    **用户选「合并」：**
-   1. 先 commit 当前状态（安全快照）：
+   1. **快照（可选）：** 若环境支持 git，执行：
       ```bash
       git add explore/<slug>.md explore/<slug>-2.md explore/<slug>-2-session.md
       git commit -m "chore: snapshot before merging <slug>-2 into <slug>"
       ```
+      若不支持，跳过此步骤并告知用户：「未创建 git 快照，若需回滚请手动备份。」
    2. Read `explore/<slug>.md` 和 `explore/<slug>-2.md`
-   3. **合成文章**：AI 重新综合正文——理解 v2 在 v1 哪个位置深挖，将 v2 内容整合进对应位置，生成结构完整的新文章（**不是简单拼接,只做润色和整体文档结构的梳理，尽量避免修改原文、和提炼删减细节，除非有重复**）
-   4. **附录**：v1 附录原文 + v2 附录原文 顺序拼接
+   3. **合成文章**：重新综合正文——理解 v2 在 v1 哪个位置深挖，将 v2 内容整合进对应位置，生成结构完整的新文章（不是简单拼接；只做润色和整体文档结构梳理；除非有重复，否则不删减细节）
+   4. **附录**：v1 附录原文 + v2 附录原文顺序拼接
    5. Write 覆盖 `explore/<slug>.md`（frontmatter `explored` 字段更新为当日日期）
    6. 删除 `explore/<slug>-2.md`
-   7. 读取 `explore/<slug>-2-session.md` 的完整内容（frontmatter 之后的所有问答）
-   8. 在 `explore/<slug>-session.md` 末尾追加以下内容，用 Write 覆盖写入：
+   7. Read `explore/<slug>-2-session.md`，取 frontmatter 之后的全部内容
+   8. Read `explore/<slug>-session.md`，在末尾追加以下结构化块，用 Write 覆盖写入：
 
-      ```
-      --- 续集 <slug>-2 ---
+      ```markdown
+      ## Imported Session: <slug>-2
+      **Continues:** <slug>
+      **Imported at:** <YYYY-MM-DD>
 
-      （<slug>-2-session.md 中 frontmatter 之后的全部问答内容）
+      ### Q1 — <标题>
+
+      **问：** ...
+
+      **答：** ...
       ```
+      （保留续集原始 Q 编号，不重新排序）
 
    9. 删除 `explore/<slug>-2-session.md`
-   10. 告知用户：「已合并至 `explore/<slug>.md`，原始问答数据已合入 `explore/<slug>-session.md`。如需回滚：`git checkout HEAD~1 -- explore/<slug>.md`」
+   10. **更新 index.yaml：** Read `explore/index.yaml`，将续集条目的 `merged` 字段设为 `true`，用 Write 覆盖写入
+   11. **更新 log.md：** Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] merge | <slug>-2 → <slug>`，用 Write 覆盖写入
+   12. 告知用户：「已合并至 `explore/<slug>.md`，原始问答数据已合入 `explore/<slug>-session.md`。」
 
    **用户选「保留分开」：** 不执行任何操作，两个文档都保留。
 
