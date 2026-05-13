@@ -25,7 +25,9 @@ description: Use when the user wants to deeply explore a question through open-e
 2. 用 Read 工具读取找到的文件，检查 frontmatter 中 `status` 字段
 3. **找到 `status: active` 的 session：**
    - 如果只有一个：读取完整内容，告知用户：「发现进行中的探索：『[root]』，继续这个 session 吗？还是开启新探索？」
-   - 如果有多个：列出所有找到的 session（标题 + 文件名），让用户选择一个继续，或选择「全部忽略，开启新探索」
+   - 如果有多个：列出所有找到的 session，让用户选择一个继续，或选择「全部忽略，开启新探索」。展示格式：
+     - 普通 session：`[root]（文件名）`
+     - 续集 session：`「[thread_title]」的续集 → [root]（文件名）`
    - 用户选「继续」→ 读取对应 session 完整内容，跳至阶段 2，从上次中断处继续
    - 用户选「新开」→ 进入阶段 1
 4. **未找到活跃 session：** 直接进入步骤 5
@@ -64,19 +66,20 @@ status: active
 
 **普通模式**：使用上方 frontmatter 模板。
 
-**续集模式**（从续集检测进入时）：slug 在原 slug 末尾追加 `-2`（再续集加 `-3`），frontmatter 增加 `continues` 字段：
+**续集模式**（从续集检测进入时）：slug 在原 slug 末尾追加 `-2`（再续集加 `-3`），frontmatter 增加 `continues` 和 `thread_title` 字段：
 
 ```markdown
 ---
 root: "<新问题或继续探索的方向>"
 slug: <slug>-2
-continues: <slug>
+continues: <original-slug>
+thread_title: "<原探索 session 文件的 root 字段值>"
 started: <YYYY-MM-DDThh:mm:ss>
 status: active
 ---
 ```
 
-创建续集 session 文件后，告知用户：「已加载『[原 root]』的探索背景，续集 session 已创建（`explore/<slug>-2-session.md`）。请继续提问。」
+创建续集 session 文件后（`thread_title` 字段取自原探索 session 文件的 `root` 值），告知用户：「已加载『[原 root]』的探索背景，续集 session 已创建（`explore/<slug>-2-session.md`）。请继续提问。」
 
 3. 立即进入阶段 2，回答根问题。
 
