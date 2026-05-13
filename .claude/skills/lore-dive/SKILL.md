@@ -137,16 +137,16 @@ description: Use when the user wants to deeply explore a question through open-e
 **手动合并流程：**
 
 1. 从用户输入解析主 slug
-2. **候选续集推断（按优先级）：**
+2. **候选续集推断（按优先级，仅考虑 `status: done` 且 `merged` 不为 `true` 的 `continues` 条目）：**
    - 用户明确指定续集 slug → 直接用
-   - index.yaml 中该 slug 下只有一个 `status: done` 的 `continues` 条目 → 自动用
-   - 有多个 `status: done` 的 `continues` 条目 → 列出让用户选：
+   - 符合条件的续集只有一个 → 自动用
+   - 符合条件的续集有多个 → 列出让用户选：
      ```
      发现多个可合并的续集，请选择：
        1. [root] (slug-2)
        2. [root] (slug-3)
      ```
-   - 无 `status: done` 的续集 → 告知「未找到可合并的续集，请检查 slug 名称」，结束流程
+   - 无符合条件的续集 → 告知「未找到可合并的续集（需 status: done 且未合并），请检查 slug 名称」，结束流程
 3. 提示用户确认：「要把『[续集 slug]』的探索合并进『[主 slug]』吗？」
 4. 用户确认 → 执行阶段 3「用户选合并」的完整流程
 5. 用户取消 → 不执行任何操作，结束流程
