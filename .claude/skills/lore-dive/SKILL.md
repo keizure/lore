@@ -314,38 +314,9 @@ explored: <YYYY-MM-DD>
 7. **续集合并提示**（仅当 session frontmatter 含 `continues` 字段时；`<sequel-slug>` = 当前 session 的 `slug` 字段值）：询问用户：
    > 「续集探索已生成 `explore/<sequel-slug>.md`。要把它合并进原文档 `explore/<slug>.md` 吗？合并后只保留一个文档，续集文件会被删除。」
 
-   **用户选「合并」：**
-   1. **快照（可选）：** 若环境支持 git，执行：
-      ```bash
-      git add explore/<slug>.md explore/<sequel-slug>.md explore/<sequel-slug>-session.md
-      git commit -m "chore: snapshot before merging <sequel-slug> into <slug>"
-      ```
-      若不支持，跳过此步骤并告知用户：「未创建 git 快照，若需回滚请手动备份。」
-   2. Read `explore/<slug>.md` 和 `explore/<sequel-slug>.md`
-   3. **合成文章**：重新综合正文——理解续集在主文档哪个位置深挖，将续集内容整合进对应位置，生成结构完整的新文章（不是简单拼接；只做润色和整体文档结构梳理；除非有重复，否则不删减细节）
-   4. **附录**：主文档附录原文 + 续集附录原文顺序拼接
-   5. Write 覆盖 `explore/<slug>.md`（frontmatter `explored` 字段更新为当日日期）
-   6. 删除 `explore/<sequel-slug>.md`
-   7. Read `explore/<sequel-slug>-session.md`，取 frontmatter 之后的全部内容
-   8. Read `explore/<slug>-session.md`，在末尾追加以下结构化块，用 Write 覆盖写入：
-
-      ```markdown
-      ## Imported Session: <sequel-slug>
-      **Continues:** <slug>
-      **Imported at:** <YYYY-MM-DD>
-
-      ### Q1 — <标题>
-
-      **问：** ...
-
-      **答：** ...
-      ```
-      （保留续集原始 Q 编号，不重新排序）
-
-   9. 删除 `explore/<sequel-slug>-session.md`
-   10. **更新 index.yaml：** Read `explore/index.yaml`，将续集条目的 `merged` 字段设为 `true`，用 Write 覆盖写入
-   11. **更新 log.md：** Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] merge | <sequel-slug> → <slug>`，用 Write 覆盖写入
-   12. 告知用户：「已合并至 `explore/<slug>.md`，原始问答数据已合入 `explore/<slug>-session.md`。」
+   **用户选「合并」：** 执行 **Merge Procedure**，其中：
+   - main-slug = 当前 session frontmatter 的 `continues` 字段值
+   - sequel-slug = 当前 session frontmatter 的 `slug` 字段值
 
    **用户选「保留分开」：** 不执行任何操作，两个文档都保留。
 
