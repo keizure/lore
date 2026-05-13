@@ -309,26 +309,26 @@ explored: <YYYY-MM-DD>
    - Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] done | <slug>`，用 Write 覆盖写入
 6. 告知用户：「探索文档已生成：`explore/<slug>.md`」
 
-7. **续集合并提示**（仅当 session frontmatter 含 `continues` 字段时）：询问用户：
-   > 「续集探索已生成 `explore/<slug>-2.md`。要把它合并进原文档 `explore/<slug>.md` 吗？合并后只保留一个文档，续集文件会被删除。」
+7. **续集合并提示**（仅当 session frontmatter 含 `continues` 字段时；`<sequel-slug>` = 当前 session 的 `slug` 字段值）：询问用户：
+   > 「续集探索已生成 `explore/<sequel-slug>.md`。要把它合并进原文档 `explore/<slug>.md` 吗？合并后只保留一个文档，续集文件会被删除。」
 
    **用户选「合并」：**
    1. **快照（可选）：** 若环境支持 git，执行：
       ```bash
-      git add explore/<slug>.md explore/<slug>-2.md explore/<slug>-2-session.md
-      git commit -m "chore: snapshot before merging <slug>-2 into <slug>"
+      git add explore/<slug>.md explore/<sequel-slug>.md explore/<sequel-slug>-session.md
+      git commit -m "chore: snapshot before merging <sequel-slug> into <slug>"
       ```
       若不支持，跳过此步骤并告知用户：「未创建 git 快照，若需回滚请手动备份。」
-   2. Read `explore/<slug>.md` 和 `explore/<slug>-2.md`
-   3. **合成文章**：重新综合正文——理解 v2 在 v1 哪个位置深挖，将 v2 内容整合进对应位置，生成结构完整的新文章（不是简单拼接；只做润色和整体文档结构梳理；除非有重复，否则不删减细节）
-   4. **附录**：v1 附录原文 + v2 附录原文顺序拼接
+   2. Read `explore/<slug>.md` 和 `explore/<sequel-slug>.md`
+   3. **合成文章**：重新综合正文——理解续集在主文档哪个位置深挖，将续集内容整合进对应位置，生成结构完整的新文章（不是简单拼接；只做润色和整体文档结构梳理；除非有重复，否则不删减细节）
+   4. **附录**：主文档附录原文 + 续集附录原文顺序拼接
    5. Write 覆盖 `explore/<slug>.md`（frontmatter `explored` 字段更新为当日日期）
-   6. 删除 `explore/<slug>-2.md`
-   7. Read `explore/<slug>-2-session.md`，取 frontmatter 之后的全部内容
+   6. 删除 `explore/<sequel-slug>.md`
+   7. Read `explore/<sequel-slug>-session.md`，取 frontmatter 之后的全部内容
    8. Read `explore/<slug>-session.md`，在末尾追加以下结构化块，用 Write 覆盖写入：
 
       ```markdown
-      ## Imported Session: <slug>-2
+      ## Imported Session: <sequel-slug>
       **Continues:** <slug>
       **Imported at:** <YYYY-MM-DD>
 
@@ -340,9 +340,9 @@ explored: <YYYY-MM-DD>
       ```
       （保留续集原始 Q 编号，不重新排序）
 
-   9. 删除 `explore/<slug>-2-session.md`
+   9. 删除 `explore/<sequel-slug>-session.md`
    10. **更新 index.yaml：** Read `explore/index.yaml`，将续集条目的 `merged` 字段设为 `true`，用 Write 覆盖写入
-   11. **更新 log.md：** Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] merge | <slug>-2 → <slug>`，用 Write 覆盖写入
+   11. **更新 log.md：** Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] merge | <sequel-slug> → <slug>`，用 Write 覆盖写入
    12. 告知用户：「已合并至 `explore/<slug>.md`，原始问答数据已合入 `explore/<slug>-session.md`。」
 
    **用户选「保留分开」：** 不执行任何操作，两个文档都保留。
@@ -353,9 +353,9 @@ explored: <YYYY-MM-DD>
 
 - 每轮问答后**立即写入** session 文件，不可积攒到对话结束
 - 只写入 `explore/` 目录，不修改其他文件
-- 合成文章使用**中文**，连贯可读，不少于 300 字
 - 每次启动**必须先读取 `explore/index.yaml`**，不可跳过
 - 所有状态变更必须同步更新 index.yaml 和 log.md
 - 分支提示只在 AI 主动判断有必要时出现，不强制每轮都加
 - 同一领域的深入问题**不算**话题漂移
+- 合成文章使用**中文**，连贯可读，不少于 300 字
 - `abandoned` 只在用户明确放弃时使用；话题漂移使用 `paused`
