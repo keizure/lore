@@ -113,7 +113,7 @@ status: active
 4. **检测话题漂移：** 如果用户新问题与根问题语义距离较远，在回答前先提示：
    > 「这个问题和当前 session『[root]』关联不大，要新开一个 session 吗？还是继续归入当前？」
 
-   用户选「新开」→ 用 Read 读取当前 session 文件，将 `status: active` 改为 `status: paused`，用 Write 覆盖写入，回到阶段 1。（`paused` 为终止状态，不会被恢复，等同于 `done`。）
+   用户选「新开」→ 用 Read 读取当前 session 文件，将 `status: active` 改为 `status: abandoned`，用 Write 覆盖写入，回到阶段 1。
 
 5. **检测完成意图（每轮检查）：** 用户说「完成」「够了」「结束」「可以了」「生成文档」「好了」「done」→ 立即进入阶段 3。
 
@@ -122,7 +122,7 @@ status: active
 ### 阶段 3：生成双层文档
 
 1. 用 Read 工具读取完整 session 文件
-2. 将所有问答合成为连贯文章（去掉「问：/答：」格式，直接可读，保留核心内容）
+2. 将所有问答合成为连贯文章（去掉「问：/答：」格式，直接可读，**只做润色和整体文档结构的梳理，尽量避免修改原文、和提炼删减细节，除非有重复**）
 3. 从 session 文件 frontmatter 读取 `slug` 字段，用 Write 工具生成 `explore/<slug>.md`：
 
 ```markdown
@@ -163,10 +163,10 @@ explored: <YYYY-MM-DD>
       git commit -m "chore: snapshot before merging <slug>-2 into <slug>"
       ```
    2. Read `explore/<slug>.md` 和 `explore/<slug>-2.md`
-   3. **合成文章**：AI 重新综合正文——理解 v2 在 v1 哪个位置深挖，将 v2 内容整合进对应位置，生成结构完整的新文章（**不是简单拼接**）
+   3. **合成文章**：AI 重新综合正文——理解 v2 在 v1 哪个位置深挖，将 v2 内容整合进对应位置，生成结构完整的新文章（**不是简单拼接,只做润色和整体文档结构的梳理，尽量避免修改原文、和提炼删减细节，除非有重复**）
    4. **附录**：v1 附录原文 + v2 附录原文 顺序拼接
    5. Write 覆盖 `explore/<slug>.md`（frontmatter `explored` 字段更新为当日日期）
-   6. 删除 `explore/<slug>-2.md` 和 `explore/<slug>-2-session.md`
+   6. 删除 `explore/<slug>-2.md`
    7. 告知用户：「已合并至 `explore/<slug>.md`。如需回滚：`git checkout HEAD~1 -- explore/<slug>.md`」
 
    **用户选「保留分开」：** 不执行任何操作，两个文档都保留。
