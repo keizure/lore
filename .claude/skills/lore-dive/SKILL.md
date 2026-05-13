@@ -351,6 +351,53 @@ explored: <YYYY-MM-DD>
 
 ---
 
+## Merge Procedure
+
+接收两个参数：
+- `<main-slug>`：主文档的 slug
+- `<sequel-slug>`：续集文档的 slug
+
+执行以下步骤：
+
+1. **git 快照**（若环境支持 git）：
+   ```bash
+   git add explore/<main-slug>.md explore/<sequel-slug>.md explore/<sequel-slug>-session.md
+   git commit -m "chore: snapshot before merging <sequel-slug> into <main-slug>"
+   ```
+   若不支持，跳过此步骤并告知用户：「未创建 git 快照，若需回滚请手动备份。」
+
+2. Read `explore/<main-slug>.md` 和 `explore/<sequel-slug>.md`
+
+3. **合成正文**：理解续集在主文档哪个位置深挖，将续集内容整合进对应位置，生成结构完整的新文章（不是简单拼接；只做润色和整体文档结构梳理；除非有重复，否则不删减细节）
+
+4. **附录**：直接拼接主文档附录 + 续集附录（两份均已是精简版，不重新生成）
+
+5. Write 覆盖 `explore/<main-slug>.md`（frontmatter `explored` 字段更新为当日日期）
+
+6. 删除 `explore/<sequel-slug>.md`
+
+7. 用 Bash 向 `explore/<main-slug>-session.md` 追加 header 块：
+   ```bash
+   printf '\n## Imported Session: <sequel-slug>\n**Continues:** <main-slug>\n**Imported at:** <YYYY-MM-DD>\n\n' \
+     >> explore/<main-slug>-session.md
+   ```
+
+8. 找到续集 session frontmatter 结束后的第一行行号，用 Bash 原文追加正文：
+   ```bash
+   N=$(grep -n '^---$' explore/<sequel-slug>-session.md | awk -F: 'NR==2{print $1+1}')
+   tail -n +$N explore/<sequel-slug>-session.md >> explore/<main-slug>-session.md
+   ```
+
+9. 删除 `explore/<sequel-slug>-session.md`
+
+10. **更新 index.yaml：** Read `explore/index.yaml`，将续集条目的 `merged` 字段设为 `true`，用 Write 覆盖写入
+
+11. **更新 log.md：** Read `explore/log.md`，在末尾追加 `## [<YYYY-MM-DD>] merge | <sequel-slug> → <main-slug>`，用 Write 覆盖写入
+
+12. 告知用户：「已合并至 `explore/<main-slug>.md`，原始问答数据已合入 `explore/<main-slug>-session.md`。」
+
+---
+
 ## Constraints
 
 - 每轮问答后**立即写入** session 文件，不可积攒到对话结束
