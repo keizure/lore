@@ -186,6 +186,23 @@
   },
   "active": "b73c2a6b0cda257b",
   "lastOpenFiles": [
+    "docs/superpowers/plans/2026-05-13-lore-dive-merge-fix.md",
+    "docs/superpowers/specs/2026-05-13-lore-dive-merge-fix-design.md",
+    "explore/log.md",
+    "explore/index.yaml",
+    "docs/superpowers/plans/2026-05-13-lore-dive-round2.md",
+    "docs/superpowers/specs/2026-05-13-lore-dive-round2-design.md",
+    "docs/superpowers/plans/2026-05-13-lore-dive-fixes.md",
+    "docs/superpowers/specs/2026-05-13-lore-dive-fixes-design.md",
+    "explore/tcp-three-way-handshake.md",
+    "explore/tcp-three-way-handshake-session.md",
+    "docs/superpowers/plans/2026-05-12-lore-dive-fidelity.md",
+    "docs/superpowers/specs/2026-05-12-lore-dive-fidelity-design.md",
+    "explore/llm-layering-session.md",
+    "docs/superpowers/plans/2026-05-12-lore-dive-continuation.md",
+    "docs/superpowers/specs/2026-05-12-lore-dive-continuation-design.md",
+    "docs/superpowers/plans/2026-05-12-lore-dive.md",
+    "reading/ai-hallucination.md",
     "fix.md",
     "explore/llm-layering-2-session.md",
     "explore/llm-layering.md",
@@ -197,10 +214,7 @@
     "explore",
     "docs/superpowers/specs/2026-05-12-explore-skill-design.md",
     "reading/bali-canggu.md",
-    "sources/sources.md",
     "sources/feeds.opml",
-    "sources",
-    "reading/karpathy-llm-wiki-summary.md",
-    "reading/async-future-directions.md"
+    "sources"
   ]
 }
