@@ -17,6 +17,70 @@ description: Use when the user wants to deeply explore a question through open-e
 
 **不适用：** 用户只是问一个简单问题，没有「把探索过程沉淀成文档」的意图。
 
+## Index 与 Log
+
+`explore/index.yaml` 是唯一的跨会话状态来源。所有 session 的状态、根问题、日期、续集关系均记录于此，避免每次启动时逐个扫描 session 文件。`explore/log.md` 是 append-only 操作记录，用于审计。
+
+### `explore/index.yaml` 格式
+
+```yaml
+- slug: llm-layering
+  root: "如果让你来做整个大语言模型的分层，你会怎么分？"
+  status: done
+  started: 2026-05-12
+  explored: 2026-05-12
+
+- slug: llm-layering-2
+  root: "残差连接和 FFN 主要解决什么问题？"
+  status: done
+  started: 2026-05-13
+  explored: 2026-05-13
+  continues: llm-layering
+  merged: true
+
+- slug: transformer-attention
+  root: "Transformer 的 Attention 机制是怎么工作的"
+  status: paused
+  started: 2026-05-10
+```
+
+**字段说明：**
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `slug` | 是 | 唯一标识，对应文件名（不含 `-session` 后缀） |
+| `root` | 是 | 根问题原文 |
+| `status` | 是 | `active` / `paused` / `done` / `abandoned` |
+| `started` | 是 | session 创建日期（YYYY-MM-DD） |
+| `explored` | done 时 | 文档生成日期 |
+| `continues` | 续集时 | 主 slug |
+| `merged` | 续集合并后 | `true` |
+
+**状态语义：**
+
+| 状态 | 含义 | Session Recovery 展示 |
+|------|------|-----------------------|
+| `active` | 进行中，可恢复 | 是（「进行中」分组） |
+| `paused` | 话题漂移暂停，可恢复 | 是（「暂停中」分组） |
+| `done` | 正常完成，已生成文档 | 否 |
+| `abandoned` | 用户明确放弃 | 否 |
+
+### `explore/log.md` 格式
+
+每行一条记录，前缀固定，append-only：
+
+```
+## [2026-05-12] create  | llm-layering | 如果让你来做整个大语言模型的分层，你会怎么分？
+## [2026-05-13] done    | llm-layering
+## [2026-05-13] create  | llm-layering-2 | 残差连接和 FFN 主要解决什么问题？
+## [2026-05-13] merge   | llm-layering-2 → llm-layering
+## [2026-05-13] pause   | transformer-attention
+```
+
+### index 更新时机
+
+以下操作后必须同步更新 index.yaml 和 log.md：创建 session、状态变更（active → done / paused / abandoned）、合并完成。
+
 ## Workflow
 
 ### 阶段 0：Session Recovery（每次启动必须先执行）
