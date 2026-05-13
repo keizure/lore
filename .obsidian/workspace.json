@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "reading/the-paper-computer.md",
+                "file": "explore/transformer-attention.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "the-paper-computer"
+              "title": "transformer-attention"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 259.5
+    "width": 319.5
   },
   "right": {
     "id": "05452fb445023b70",
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "reading/the-paper-computer.md",
+                "file": "explore/transformer-attention.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "the-paper-computer 的反向链接列表"
+              "title": "transformer-attention 的反向链接列表"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "reading/the-paper-computer.md",
+                "file": "explore/transformer-attention.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "the-paper-computer 的出链列表"
+              "title": "transformer-attention 的出链列表"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "reading/the-paper-computer.md",
+                "file": "explore/transformer-attention.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "the-paper-computer 的大纲"
+              "title": "transformer-attention 的大纲"
             }
           }
         ]
@@ -186,10 +186,14 @@
   },
   "active": "b73c2a6b0cda257b",
   "lastOpenFiles": [
-    "explore/transformer-attention.md",
+    "fix.md",
+    "explore/llm-layering-2-session.md",
+    "explore/llm-layering.md",
     "explore/transformer-attention-session.md",
-    "explore/transformer-attention-2.md",
     "explore/transformer-attention-2-session.md",
+    "explore/transformer-attention-2.md",
+    "explore/transformer-attention.md",
+    "reading/the-paper-computer.md",
     "explore",
     "docs/superpowers/specs/2026-05-12-explore-skill-design.md",
     "reading/bali-canggu.md",
@@ -197,7 +201,6 @@
     "sources/feeds.opml",
     "sources",
     "reading/karpathy-llm-wiki-summary.md",
-    "reading/async-future-directions.md",
-    "reading/the-paper-computer.md"
+    "reading/async-future-directions.md"
   ]
 }
