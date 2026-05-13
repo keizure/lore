@@ -189,7 +189,32 @@ status: active
 
 创建续集 session 文件后（`thread_title` 字段取自原探索 session 文件的 `root` 值），告知用户：「已加载『[原 root]』的探索背景，续集 session 已创建（`explore/<slug>-2-session.md`）。请继续提问。」
 
-3. 立即进入阶段 2，回答根问题。
+3. **更新 index.yaml 和 log.md：**
+   - Read `explore/index.yaml`，在末尾追加新条目，用 Write 覆盖写入：
+
+   **普通模式：**
+   ```yaml
+   - slug: <slug>
+     root: "<用户的根问题>"
+     status: active
+     started: <YYYY-MM-DD>
+   ```
+
+   **续集模式：**
+   ```yaml
+   - slug: <slug>-2
+     root: "<新问题或继续探索的方向>"
+     status: active
+     started: <YYYY-MM-DD>
+     continues: <original-slug>
+   ```
+
+   - Read `explore/log.md`，在末尾追加，用 Write 覆盖写入：
+   ```
+   ## [<YYYY-MM-DD>] create | <slug> | <root>
+   ```
+
+4. 立即进入阶段 2，回答根问题。
 
 ---
 
